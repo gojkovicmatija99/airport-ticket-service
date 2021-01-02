@@ -32,4 +32,16 @@ public class PurchaseController {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
     }
+
+    @GetMapping("/cancel/{flightId}")
+    public ResponseEntity<List<Purchase>> cancelTickets(@PathVariable Long flightId) {
+        try {
+            purchaseService.cancelTickets(flightId);
+            return new ResponseEntity<>(HttpStatus.ACCEPTED);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
+    }
 }

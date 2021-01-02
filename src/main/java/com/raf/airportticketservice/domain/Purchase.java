@@ -14,11 +14,13 @@ public class Purchase {
     private Long flightId;
     private Long userId;
     private Date date;
+    private Boolean canceled;
 
     public Purchase(Long flightId, Long userId, Date date) {
         this.flightId = flightId;
         this.userId = userId;
         this.date = date;
+        this.canceled = false;
     }
 
     public Purchase() {}

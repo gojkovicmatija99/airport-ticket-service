@@ -19,4 +19,17 @@ public class PurchaseService implements IPurchaseService {
     public List<Purchase> getBoughtTickets(Long userId) {
         return purchaseRepository.findByUserId(userId);
     }
+
+    @Override
+    public Boolean cancelTickets(Long flightId) {
+        List<Purchase> canceled = purchaseRepository.findByFlightId(flightId);
+        if(canceled.size() == 0)
+            return true;
+        for(Purchase current:canceled) {
+            //TODO: Svakom korisniku poslati mejl, oduzeti milje
+
+        }
+        purchaseRepository.setCanceled(flightId);
+        return true;
+    }
 }
