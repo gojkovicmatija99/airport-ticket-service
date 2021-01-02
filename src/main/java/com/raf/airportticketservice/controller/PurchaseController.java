@@ -25,23 +25,23 @@ public class PurchaseController {
     public ResponseEntity<List<Purchase>> getBoughtTickets(@PathVariable Long id) {
         try {
             List<Purchase> purchases = purchaseService.getBoughtTickets(id);
-            return new ResponseEntity<>(purchases, HttpStatus.ACCEPTED);
+            return new ResponseEntity(purchases, HttpStatus.ACCEPTED);
         }
         catch (Exception e) {
             e.printStackTrace();
-            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+            return new ResponseEntity(HttpStatus.FORBIDDEN);
         }
     }
 
     @GetMapping("/cancel/{flightId}")
-    public ResponseEntity<List<Purchase>> cancelTickets(@PathVariable Long flightId) {
+    public ResponseEntity cancelTickets(@PathVariable Long flightId) {
         try {
             purchaseService.cancelTickets(flightId);
-            return new ResponseEntity<>(HttpStatus.ACCEPTED);
+            return new ResponseEntity(HttpStatus.ACCEPTED);
         }
         catch (Exception e) {
             e.printStackTrace();
-            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+            return new ResponseEntity(HttpStatus.FORBIDDEN);
         }
     }
 }

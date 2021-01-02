@@ -22,14 +22,13 @@ public class PurchaseService implements IPurchaseService {
 
     @Override
     public Boolean cancelTickets(Long flightId) {
+        purchaseRepository.setCanceled(flightId);
         List<Purchase> canceled = purchaseRepository.findByFlightId(flightId);
         if(canceled.size() == 0)
             return true;
         for(Purchase current:canceled) {
             //TODO: Svakom korisniku poslati mejl, oduzeti milje
-
         }
-        purchaseRepository.setCanceled(flightId);
         return true;
     }
 }
