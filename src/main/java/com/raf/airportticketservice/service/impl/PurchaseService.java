@@ -36,7 +36,6 @@ public class PurchaseService implements IPurchaseService {
         if(canceled.size() == 0)
             return true;
         for(Purchase current:canceled) {
-            //TODO: Svakom korisniku poslati mejl, oduzeti milje
             jmsTemplate.convertAndSend(usersQueue, current.getUserId().toString());
         }
         return true;
