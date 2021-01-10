@@ -24,6 +24,9 @@ public class PurchaseService implements IPurchaseService {
     @Autowired
     Queue usersQueue;
 
+    @Autowired
+    Queue flightsQueue;
+
     public PurchaseService(PurchaseRepository purchaseRepository) {
         this.purchaseRepository = purchaseRepository;
     }
@@ -56,7 +59,8 @@ public class PurchaseService implements IPurchaseService {
         Purchase purchase = new Purchase(flightId, userId, currentDate);
         purchaseRepository.save(purchase);
         String queueItem = "miles:" + userId+","+flightId;
-        jmsTemplate.convertAndSend(usersQueue,queueItem);
+        jmsTemplate.convertAndSend(usersQueue, queueItem);
+        jmsTemplate.convertAndSend(flightsQueue, flightId);
         return true;
     }
 }
