@@ -38,6 +38,7 @@ public class PurchaseController {
             return new ResponseEntity<>(true, HttpStatus.OK);
         }
         catch(Exception e) {
+            e.printStackTrace();
             return new ResponseEntity<>(false, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 

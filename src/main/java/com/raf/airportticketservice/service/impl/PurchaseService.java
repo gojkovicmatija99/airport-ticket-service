@@ -40,7 +40,8 @@ public class PurchaseService implements IPurchaseService {
         if(canceled.size() == 0)
             return true;
         for(Purchase current:canceled) {
-            jmsTemplate.convertAndSend(usersQueue, current.getUserId().toString());
+            String queueItem = "cancel:" + current.getUserId().toString();
+            jmsTemplate.convertAndSend(usersQueue, queueItem);
         }
         return true;
     }
@@ -50,11 +51,12 @@ public class PurchaseService implements IPurchaseService {
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", token);
         ResponseEntity<Object> responseEntity = UtilsMethods.sendGetHeader("http://localhost:8081/get_userId", headers);
-        Long userId = (Long) responseEntity.getBody();
+        Long userId = ((Integer) responseEntity.getBody()).longValue();
         Date currentDate = new Date();
         Purchase purchase = new Purchase(flightId, userId, currentDate);
         purchaseRepository.save(purchase);
-        //TODO: Azurirati korisnicke milje pomocu ActiveMQ
+        String queueItem = "miles:" + userId+","+flightId;
+        jmsTemplate.convertAndSend(usersQueue,queueItem);
         return true;
     }
 }
