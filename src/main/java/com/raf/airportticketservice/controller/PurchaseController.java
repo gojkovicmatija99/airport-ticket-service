@@ -2,12 +2,10 @@ package com.raf.airportticketservice.controller;
 
 import com.raf.airportticketservice.domain.Purchase;
 import com.raf.airportticketservice.service.impl.PurchaseService;
+import com.raf.airportticketservice.utils.UtilsMethods;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
 import java.util.List;
@@ -31,5 +29,17 @@ public class PurchaseController {
             e.printStackTrace();
             return new ResponseEntity(HttpStatus.FORBIDDEN);
         }
+    }
+
+    @GetMapping("/ticket/{flightId}")
+    public ResponseEntity<Boolean> buyTicket(@PathVariable Long flightId, @RequestHeader(value = "Authorization") String token) {
+        try {
+            purchaseService.buyTicket(flightId, token);
+            return new ResponseEntity<>(true, HttpStatus.OK);
+        }
+        catch(Exception e) {
+            return new ResponseEntity<>(false, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
     }
 }

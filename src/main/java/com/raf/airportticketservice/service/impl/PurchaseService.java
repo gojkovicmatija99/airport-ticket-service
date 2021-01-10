@@ -3,11 +3,15 @@ package com.raf.airportticketservice.service.impl;
 import com.raf.airportticketservice.domain.Purchase;
 import com.raf.airportticketservice.repository.PurchaseRepository;
 import com.raf.airportticketservice.service.IPurchaseService;
+import com.raf.airportticketservice.utils.UtilsMethods;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.jms.Queue;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -38,6 +42,19 @@ public class PurchaseService implements IPurchaseService {
         for(Purchase current:canceled) {
             jmsTemplate.convertAndSend(usersQueue, current.getUserId().toString());
         }
+        return true;
+    }
+
+    @Override
+    public Boolean buyTicket(Long flightId, String token) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", token);
+        ResponseEntity<Object> responseEntity = UtilsMethods.sendGetHeader("http://localhost:8081/get_userId", headers);
+        Long userId = (Long) responseEntity.getBody();
+        Date currentDate = new Date();
+        Purchase purchase = new Purchase(flightId, userId, currentDate);
+        purchaseRepository.save(purchase);
+        //TODO: Azurirati korisnicke milje pomocu ActiveMQ
         return true;
     }
 }
