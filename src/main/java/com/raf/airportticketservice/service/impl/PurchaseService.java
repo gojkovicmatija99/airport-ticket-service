@@ -60,7 +60,7 @@ public class PurchaseService implements IPurchaseService {
         purchaseRepository.save(purchase);
         String queueItem = "miles:" + userId+","+flightId;
         jmsTemplate.convertAndSend(usersQueue, queueItem);
-        jmsTemplate.convertAndSend(flightsQueue, flightId);
+        jmsTemplate.convertAndSend(flightsQueue, flightId.toString());
         return true;
     }
 }
