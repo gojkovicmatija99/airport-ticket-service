@@ -20,10 +20,10 @@ public class PurchaseController {
         this.purchaseService = purchaseService;
     }
 
-    @GetMapping("/bought/{id}")
-    public ResponseEntity<List<Purchase>> getBoughtTickets(@PathVariable Long id) {
+    @GetMapping("/bought")
+    public ResponseEntity<List<Purchase>> getBoughtTickets(@RequestHeader(value = "Authorization") String token) {
         try {
-            List<Purchase> purchases = purchaseService.getBoughtTickets(id);
+            List<Purchase> purchases = purchaseService.getBoughtTickets(token);
             return new ResponseEntity(purchases, HttpStatus.ACCEPTED);
         }
         catch (Exception e) {
@@ -36,12 +36,14 @@ public class PurchaseController {
     public ResponseEntity<Long> buyTicket(@PathVariable Long flightId, @RequestHeader(value = "Authorization") String token) {
         try {
             Long price = purchaseService.buyTicket(flightId, token);
-            return new ResponseEntity(price, HttpStatus.OK);
+            if(price != 0)
+                return new ResponseEntity(price, HttpStatus.OK);
+            else
+                return new ResponseEntity(HttpStatus.FORBIDDEN);
         }
         catch(Exception e) {
             e.printStackTrace();
-            return new ResponseEntity(0, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
         }
-
     }
 }

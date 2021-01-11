@@ -1,5 +1,6 @@
 package com.raf.airportticketservice.utils;
 
+import com.raf.airportticketservice.dto.FlightDto;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -26,6 +27,18 @@ public class UtilsMethods {
         HttpEntity<String> entity = new HttpEntity<String>(null, headers);
 
         ResponseEntity<Object> response = restTemplate.exchange(url, HttpMethod.GET, entity, Object.class);
+
+        return response;
+    }
+
+    public static ResponseEntity<FlightDto> getFlightDto(String url) {
+
+        RestTemplate restTemplate = new RestTemplate();
+        HttpHeaders headers = new HttpHeaders();
+
+        HttpEntity<String> entity = new HttpEntity<String>(null, headers);
+
+        ResponseEntity<FlightDto> response = restTemplate.exchange(url, HttpMethod.GET, entity, FlightDto.class);
 
         return response;
     }

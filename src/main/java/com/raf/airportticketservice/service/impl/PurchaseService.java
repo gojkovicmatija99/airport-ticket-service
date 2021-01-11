@@ -1,6 +1,7 @@
 package com.raf.airportticketservice.service.impl;
 
 import com.raf.airportticketservice.domain.Purchase;
+import com.raf.airportticketservice.dto.FlightDto;
 import com.raf.airportticketservice.repository.IPurchaseRepository;
 import com.raf.airportticketservice.service.IPurchaseService;
 import com.raf.airportticketservice.utils.UtilsMethods;
@@ -33,7 +34,11 @@ public class PurchaseService implements IPurchaseService {
     }
 
     @Override
-    public List<Purchase> getBoughtTickets(Long userId) {
+    public List<Purchase> getBoughtTickets(String token) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", token);
+        ResponseEntity<Object> responseEntity = UtilsMethods.sendGetHeader("http://localhost:8081/get_userId", headers);
+        Long userId = ((Integer) responseEntity.getBody()).longValue();
         return purchaseRepository.findByUserId(userId);
     }
 
@@ -52,20 +57,24 @@ public class PurchaseService implements IPurchaseService {
 
     @Override
     public Long buyTicket(Long flightId, String token) {
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Authorization", token);
-        ResponseEntity<Object> responseEntity = UtilsMethods.sendGetHeader("http://localhost:8081/get_userId", headers);
-        Long userId = ((Integer) responseEntity.getBody()).longValue();
-        Date currentDate = new Date();
-        Purchase purchase = new Purchase(flightId, userId, currentDate);
-        purchaseRepository.save(purchase);
+        ResponseEntity<FlightDto> responseEntity = UtilsMethods.getFlightDto("http://localhost:8082/flight/get/" + flightId);
+        FlightDto flightInfo = responseEntity.getBody();
+        System.out.println(flightInfo.getPrice());
+        if(!flightInfo.getCanceled()) {
+            HttpHeaders headers = new HttpHeaders();
+            headers.add("Authorization", token);
+            ResponseEntity<Object> userInfo = UtilsMethods.sendGetHeader("http://localhost:8081/get_userId", headers);
+            Long userId = ((Integer) userInfo.getBody()).longValue();
+            Date currentDate = new Date();
+            Purchase purchase = new Purchase(flightId, userId, currentDate);
+            purchaseRepository.save(purchase);
 
-        responseEntity = UtilsMethods.sendGet("http://localhost:8082/flight/price/" + flightId);
-        Long price = (Long)responseEntity.getBody();
-
-        String queueItem = "miles:" + userId + "," + flightId;
-        jmsTemplate.convertAndSend(usersQueue, queueItem);
-        jmsTemplate.convertAndSend(flightsQueue, flightId.toString());
-        return price;
+            String queueItem = "miles:" + userId + "," + flightId;
+            jmsTemplate.convertAndSend(usersQueue, queueItem);
+            jmsTemplate.convertAndSend(flightsQueue, flightId.toString());
+            return flightInfo.getPrice();
+        }
+        else
+            return 0l;
     }
 }
