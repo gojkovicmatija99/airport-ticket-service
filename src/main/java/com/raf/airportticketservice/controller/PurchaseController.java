@@ -33,14 +33,14 @@ public class PurchaseController {
     }
 
     @GetMapping("/ticket/{flightId}")
-    public ResponseEntity<Boolean> buyTicket(@PathVariable Long flightId, @RequestHeader(value = "Authorization") String token) {
+    public ResponseEntity<Long> buyTicket(@PathVariable Long flightId, @RequestHeader(value = "Authorization") String token) {
         try {
-            purchaseService.buyTicket(flightId, token);
-            return new ResponseEntity<>(true, HttpStatus.OK);
+            Long price = purchaseService.buyTicket(flightId, token);
+            return new ResponseEntity(price, HttpStatus.OK);
         }
         catch(Exception e) {
             e.printStackTrace();
-            return new ResponseEntity<>(false, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity(0, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
     }

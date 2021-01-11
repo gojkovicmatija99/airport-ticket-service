@@ -11,6 +11,7 @@ import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.jms.Queue;
+import javax.persistence.criteria.CriteriaBuilder;
 import java.util.Date;
 import java.util.List;
 
@@ -50,7 +51,7 @@ public class PurchaseService implements IPurchaseService {
     }
 
     @Override
-    public Boolean buyTicket(Long flightId, String token) {
+    public Long buyTicket(Long flightId, String token) {
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", token);
         ResponseEntity<Object> responseEntity = UtilsMethods.sendGetHeader("http://localhost:8081/get_userId", headers);
@@ -58,9 +59,13 @@ public class PurchaseService implements IPurchaseService {
         Date currentDate = new Date();
         Purchase purchase = new Purchase(flightId, userId, currentDate);
         purchaseRepository.save(purchase);
-        String queueItem = "miles:" + userId+","+flightId;
+
+        responseEntity = UtilsMethods.sendGet("http://localhost:8082/flight/price/" + flightId);
+        Long price = (Long)responseEntity.getBody();
+
+        String queueItem = "miles:" + userId + "," + flightId;
         jmsTemplate.convertAndSend(usersQueue, queueItem);
         jmsTemplate.convertAndSend(flightsQueue, flightId.toString());
-        return true;
+        return price;
     }
 }
