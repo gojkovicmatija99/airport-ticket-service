@@ -10,6 +10,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 import javax.jms.Queue;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -33,6 +34,7 @@ public class PurchaseService implements IPurchaseService {
         this.purchaseRepository = purchaseRepository;
     }
 
+    @CrossOrigin
     @Override
     public List<Purchase> getBoughtTickets(String token) {
         HttpHeaders headers = new HttpHeaders();

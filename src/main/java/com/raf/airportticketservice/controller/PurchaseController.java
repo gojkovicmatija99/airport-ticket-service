@@ -20,6 +20,7 @@ public class PurchaseController {
         this.purchaseService = purchaseService;
     }
 
+    @CrossOrigin
     @GetMapping("/bought")
     public ResponseEntity<List<Purchase>> getBoughtTickets(@RequestHeader(value = "Authorization") String token) {
         try {
