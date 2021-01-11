@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Repository
-public interface PurchaseRepository extends JpaRepository<Purchase, Long> {
+public interface IPurchaseRepository extends JpaRepository<Purchase, Long> {
     List<Purchase> findByUserId(Long userId);
     List<Purchase> findByFlightId(Long flightId);
     @Modifying(clearAutomatically = true)

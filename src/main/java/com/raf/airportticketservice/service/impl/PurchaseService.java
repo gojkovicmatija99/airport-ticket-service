@@ -1,7 +1,7 @@
 package com.raf.airportticketservice.service.impl;
 
 import com.raf.airportticketservice.domain.Purchase;
-import com.raf.airportticketservice.repository.PurchaseRepository;
+import com.raf.airportticketservice.repository.IPurchaseRepository;
 import com.raf.airportticketservice.service.IPurchaseService;
 import com.raf.airportticketservice.utils.UtilsMethods;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +16,7 @@ import java.util.List;
 
 @Service
 public class PurchaseService implements IPurchaseService {
-    private PurchaseRepository purchaseRepository;
+    private IPurchaseRepository purchaseRepository;
 
     @Autowired
     JmsTemplate jmsTemplate;
@@ -27,7 +27,7 @@ public class PurchaseService implements IPurchaseService {
     @Autowired
     Queue flightsQueue;
 
-    public PurchaseService(PurchaseRepository purchaseRepository) {
+    public PurchaseService(IPurchaseRepository purchaseRepository) {
         this.purchaseRepository = purchaseRepository;
     }
 

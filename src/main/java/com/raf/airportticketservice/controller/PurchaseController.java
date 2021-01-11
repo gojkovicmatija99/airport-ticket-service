@@ -1,6 +1,7 @@
 package com.raf.airportticketservice.controller;
 
 import com.raf.airportticketservice.domain.Purchase;
+import com.raf.airportticketservice.service.IPurchaseService;
 import com.raf.airportticketservice.service.impl.PurchaseService;
 import com.raf.airportticketservice.utils.UtilsMethods;
 import org.springframework.http.HttpStatus;
@@ -13,9 +14,9 @@ import java.util.List;
 @RestController
 @RequestMapping("/purchase")
 public class PurchaseController {
-    private PurchaseService purchaseService;
+    private IPurchaseService purchaseService;
 
-    public PurchaseController(PurchaseService purchaseService) {
+    public PurchaseController(IPurchaseService purchaseService) {
         this.purchaseService = purchaseService;
     }
 
