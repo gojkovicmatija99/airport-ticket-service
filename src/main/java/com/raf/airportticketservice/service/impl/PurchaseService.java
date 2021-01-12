@@ -57,8 +57,14 @@ public class PurchaseService implements IPurchaseService {
         return true;
     }
 
+    private Double calculateDistance(Long userId) {
+        ResponseEntity<Object> responseEntity = UtilsMethods.sendGet("http://localhost:8762/rest-airport-user-service/discount/" + userId);
+            Double discount = (Double) responseEntity.getBody();
+            return discount;
+    }
+
     @Override
-    public Long buyTicket(Long flightId, String token) {
+    public Double buyTicket(Long flightId, String token) {
         ResponseEntity<FlightDto> responseEntity = UtilsMethods.getFlightDto("http://localhost:8762/rest-airport-flight-service/flight/get/" + flightId);
         FlightDto flightInfo = responseEntity.getBody();
         System.out.println(flightInfo.getPrice());
@@ -74,9 +80,10 @@ public class PurchaseService implements IPurchaseService {
             String queueItem = "miles:" + userId + "," + flightId;
             jmsTemplate.convertAndSend(usersQueue, queueItem);
             jmsTemplate.convertAndSend(flightsQueue, flightId.toString());
-            return flightInfo.getPrice();
+
+            return flightInfo.getPrice()*1.0;
         }
         else
-            return 0l;
+            return 0.0;
     }
 }
