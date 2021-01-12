@@ -39,7 +39,7 @@ public class PurchaseService implements IPurchaseService {
     public List<Purchase> getBoughtTickets(String token) {
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", token);
-        ResponseEntity<Object> responseEntity = UtilsMethods.sendGetHeader("http://localhost:8081/get_userId", headers);
+        ResponseEntity<Object> responseEntity = UtilsMethods.sendGetHeader("http://localhost:8762/rest-airport-user-service/get_userId", headers);
         Long userId = ((Integer) responseEntity.getBody()).longValue();
         return purchaseRepository.findByUserId(userId);
     }
@@ -59,13 +59,13 @@ public class PurchaseService implements IPurchaseService {
 
     @Override
     public Long buyTicket(Long flightId, String token) {
-        ResponseEntity<FlightDto> responseEntity = UtilsMethods.getFlightDto("http://localhost:8082/flight/get/" + flightId);
+        ResponseEntity<FlightDto> responseEntity = UtilsMethods.getFlightDto("http://localhost:8762/rest-airport-flight-service/flight/get/" + flightId);
         FlightDto flightInfo = responseEntity.getBody();
         System.out.println(flightInfo.getPrice());
         if(!flightInfo.getCanceled()) {
             HttpHeaders headers = new HttpHeaders();
             headers.add("Authorization", token);
-            ResponseEntity<Object> userInfo = UtilsMethods.sendGetHeader("http://localhost:8081/get_userId", headers);
+            ResponseEntity<Object> userInfo = UtilsMethods.sendGetHeader("http://localhost:8762/rest-airport-user-service/get_userId", headers);
             Long userId = ((Integer) userInfo.getBody()).longValue();
             Date currentDate = new Date();
             Purchase purchase = new Purchase(flightId, userId, currentDate);
