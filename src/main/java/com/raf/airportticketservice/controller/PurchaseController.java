@@ -33,6 +33,7 @@ public class PurchaseController {
         }
     }
 
+    @CrossOrigin
     @GetMapping("/ticket/{flightId}")
     public ResponseEntity<Long> buyTicket(@PathVariable Long flightId, @RequestHeader(value = "Authorization") String token) {
         try {
