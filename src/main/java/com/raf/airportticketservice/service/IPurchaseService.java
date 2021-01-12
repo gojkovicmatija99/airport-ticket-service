@@ -7,5 +7,5 @@ import java.util.List;
 public interface IPurchaseService {
     List<Purchase> getBoughtTickets(String token);
     Boolean cancelTickets(Long flightId);
-    Long buyTicket(Long ticketId, String token);
+    Double buyTicket(Long ticketId, String token);
 }

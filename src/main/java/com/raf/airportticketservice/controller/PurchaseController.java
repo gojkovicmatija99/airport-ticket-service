@@ -35,10 +35,10 @@ public class PurchaseController {
 
     @CrossOrigin
     @GetMapping("/ticket/{flightId}")
-    public ResponseEntity<Long> buyTicket(@PathVariable Long flightId, @RequestHeader(value = "Authorization") String token) {
+    public ResponseEntity<Double> buyTicket(@PathVariable Long flightId, @RequestHeader(value = "Authorization") String token) {
         try {
-            Long price = purchaseService.buyTicket(flightId, token);
-            if(price != 0)
+            Double price = purchaseService.buyTicket(flightId, token);
+            if(price != 0.0)
                 return new ResponseEntity(price, HttpStatus.OK);
             else
                 return new ResponseEntity(HttpStatus.FORBIDDEN);
